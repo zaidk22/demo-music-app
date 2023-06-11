@@ -1,72 +1,70 @@
+import 'package:demo_music_app/controller.dart';
 import 'package:demo_music_app/favorite.dart';
+import 'package:demo_music_app/music.dart';
+import 'package:demo_music_app/search.dart';
 import 'package:demo_music_app/trending.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  int _pageIndex = 0;
-  final List<Widget> _tabList = [Trending(),Favourite()];
    @override
   Widget build(BuildContext context) {
-    return Container(
+     HomeController homeController = Get.put(HomeController());
+    return Obx(() => Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.centerRight,
-          end: Alignment.centerLeft,
-          colors: [
-            Colors.lightBlue.shade600,
-            Colors.lightBlue.shade900
-          ]
-        )
+          gradient: LinearGradient(
+              begin: Alignment.centerRight,
+              end: Alignment.centerLeft,
+              colors: [
+                Colors.lightBlue.shade600,
+                Colors.lightBlue.shade900
+              ]
+          )
       ),
       child: Scaffold(
-        backgroundColor: Colors.transparent,
-        bottomNavigationBar: Container(
-          padding: EdgeInsets.all(20),
-          child: ClipRRect(
-            borderRadius: const BorderRadius.all(
-                Radius.circular(30)
-            ),
-            child: BottomNavigationBar(
-                currentIndex: _pageIndex,
-                onTap: (int index) {
+          backgroundColor: Colors.transparent,
+          bottomNavigationBar: Container(
+            padding: EdgeInsets.all(20),
+            child: ClipRRect(
+              borderRadius: const BorderRadius.all(
+                  Radius.circular(30)
+              ),
+              child: BottomNavigationBar(
+                  currentIndex: homeController.pageIndex.value,
+                  onTap: (int index) {
 
-                  setState(() {
-                    _pageIndex= index;
-                  });
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("$index")));
-                },
-                elevation: 0,
-                backgroundColor: Colors.blueAccent,
-                unselectedItemColor: Colors.white,
-                selectedItemColor: Colors.white,
-                showSelectedLabels: false,
-                showUnselectedLabels: false,
-                items: const [
-                  BottomNavigationBarItem(icon: Icon(Icons.home,
-                    color: Colors.lightBlue,
-                  ),label: "Home",),
-                  BottomNavigationBarItem(icon: Icon(Icons.search,color: Colors.lightBlue,),label: "Search",),
-                  BottomNavigationBarItem(icon: Icon(Icons.music_note,color: Colors.lightBlue,),label: "Music",),
-                  BottomNavigationBarItem(icon: Icon(Icons.person,color: Colors.lightBlue,),label: "Favorite",)
-                ]),
+                    homeController.pageIndex.value = index;
+                    // setState(() {
+                    //   _pageIndex= index;
+                    // });
+                    //  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("$index")));
+                  },
+                  elevation: 0,
+                  backgroundColor: Colors.blueAccent,
+                  unselectedItemColor: Colors.white,
+                  selectedItemColor: Colors.white,
+                  showSelectedLabels: false,
+                  showUnselectedLabels: false,
+                  items: const [
+                    BottomNavigationBarItem(icon: Icon(Icons.home,
+                      color: Colors.lightBlue,
+                    ),label: "Home",),
+                    BottomNavigationBarItem(icon: Icon(Icons.search,color: Colors.lightBlue,),label: "Search",),
+                    BottomNavigationBarItem(icon: Icon(Icons.music_note,color: Colors.lightBlue,),label: "Music",),
+                    BottomNavigationBarItem(icon: Icon(Icons.person,color: Colors.lightBlue,),label: "Favorite",)
+                  ]),
+            ),
           ),
-        ),
-        appBar: _customAppBar(),
-        body: _tabList.elementAt(_pageIndex)
+          appBar: null,
+          body: homeController.tabList.elementAt(homeController.pageIndex.value),
+          //body: _tabList.elementAt(_pageIndex)
       ),
-    );
+    ));
   }
 }
-
-
 
 class _customAppBar extends StatelessWidget with PreferredSizeWidget{
   const _customAppBar({
